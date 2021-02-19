@@ -10,9 +10,10 @@ import lombok.Data;
 public class Header{
     private short magicNum;
     private byte version;
-    private short headerLen;
-    private int messageLen;
-    private long messageId;
-    private byte messageType;
+    private short headerSize;
+    private int msgSize;
+    private long msgId;
+    private byte msgType;
     private byte serializationCode;
+    private Object[] extension;
 }

@@ -22,13 +22,8 @@
         <!-- 使用 netty 来实现网络通信 -->
         <dependency>
             <groupId>io.netty</groupId>
-            <artifactId>netty-buffer</artifactId>
-            <version>4.0.38.Final</version>
-        </dependency>
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-handler</artifactId>
-            <version>4.0.38.Final</version>
+            <artifactId>netty-all</artifactId>
+            <version>4.1.42.Final</version>
         </dependency>
         <!-- 使用 springboot 的 IoC-->
         <dependency>

@@ -58,7 +58,6 @@
         <module>zrpc-plugin</module>
         <module>zrpc-example</module>
         <module>zrpc-example/zrpc-example-api</module>
-        <module>zrpc-api</module>
         <module>zrpc-consumer</module>
         <module>zrpc-registry</module>
         <module>zrpc-provider</module>

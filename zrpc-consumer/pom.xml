@@ -16,5 +16,10 @@
             <artifactId>zrpc-registry</artifactId>
             <version>0.1.0-alpha</version>
         </dependency>
+        <dependency>
+            <groupId>github.zjm404</groupId>
+            <artifactId>zrpc-protocol</artifactId>
+            <version>0.1.0-alpha</version>
+        </dependency>
     </dependencies>
 </project>

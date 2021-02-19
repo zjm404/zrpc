@@ -37,7 +37,7 @@ public class RequestHandler extends SimpleChannelInboundHandler<Message<Request>
         if(obj != null){
             ISerialization serialization = SerializationFactory.getSerialization(header.getSerializationCode());
             response.setData(serialization.enSerialize(obj));
-            header.setMessageType(MessageType.RESPONSE.getCode());
+            header.setMsgType(MessageType.RESPONSE.getCode());
             message.setHeader(header);
             message.setBody(response);
         }else{
