@@ -1,18 +1,16 @@
 package github.zjm404.zrpc.core.example;
 
 import github.zjm404.zrpc.core.api.IDemo;
-import github.zjm404.zrpc.core.common.annotation.Provider;
+import github.zjm404.zrpc.provider.annotion.ZrpcService;
 
 /**
- * @Author
- * @Date 2020/11/6
- * @Description
- * @Version 1.0
+ * @author zjm
+ * @date 2020/11/6
  */
-@Provider
+@ZrpcService
 public class DemoImpl implements IDemo {
     @Override
-    public void sayHello() {
-        System.out.println("hello world");
+    public String sayHello() {
+        return "hello world";
     }
 }

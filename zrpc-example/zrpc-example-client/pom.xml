@@ -12,4 +12,23 @@
     <artifactId>zrpc-example-client</artifactId>
     <version>0.1.0-alpha</version>
     <groupId>github.zjm404</groupId>
+
+    <dependencies>
+        <dependency>
+            <groupId>github.zjm404</groupId>
+            <artifactId>zrpc-consumer</artifactId>
+            <version>0.1.0-alpha</version>
+        </dependency>
+        <dependency>
+            <groupId>github.zjm404</groupId>
+            <artifactId>zrpc-example-api</artifactId>
+            <version>0.1.0-alpha</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <version>1.5.14.RELEASE</version>
+        </dependency>
+    </dependencies>
 </project>

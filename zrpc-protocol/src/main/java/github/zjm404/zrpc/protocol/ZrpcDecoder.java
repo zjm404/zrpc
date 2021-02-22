@@ -64,10 +64,10 @@ public class ZrpcDecoder extends ByteToMessageDecoder {
             Header header = new Header();
             header.setMagicNum(magicNum);
             header.setVersion(version);
-            header.setHeaderLen(headerLen);
-            header.setMessageLen(msgLen);
-            header.setMessageId(msgId);
-            header.setMessageType(msgType);
+            header.setHeaderSize(headerLen);
+            header.setMsgSize(msgLen);
+            header.setMsgId(msgId);
+            header.setMsgType(msgType);
             header.setSerializationCode(serializationCode);
 
             //根据消息类型采取不同的转化
@@ -104,10 +104,10 @@ public class ZrpcDecoder extends ByteToMessageDecoder {
      * 长度检测
      */
     private boolean isLegalMsg(short magicNum, byte version, int msgLen, int readableBytes) {
-        if (magicNum != 125) {
+        if (magicNum != ProtocolVersionOne.MAGIC) {
             return false;
         }
-        if (version != 1) {
+        if (version != ProtocolVersionOne.VERSION) {
             return false;
         }
         if (msgLen > readableBytes) {

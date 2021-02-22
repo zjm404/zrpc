@@ -1,19 +1,16 @@
 package github.zjm404.zrpc.core.example;
 
-import java.util.ServiceLoader;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
 
 /**
- * @Author
- * @Date 2020/11/6
- * @Description
- * @Version 1.0
+ * @author zjm
+ * @date 2020/11/6
  */
-//@SpringBootApplication
+@SpringBootApplication
 public class ServerApplication {
     public static void main(String[] args) {
-//        SpringApplication.run(ServerApplication.class,args);
-        IServer server = ServiceLoader.load(IServer.class).iterator().next();
-        System.out.println("hello world");
-//        server.start("hello world".getBytes());
+        SpringApplication.run(ServerApplication.class);
     }
 }

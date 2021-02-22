@@ -13,13 +13,14 @@
     <dependencies>
         <dependency>
             <groupId>github.zjm404</groupId>
-            <artifactId>zrpc-core</artifactId>
+            <artifactId>zrpc-example-api</artifactId>
             <version>0.1.0-alpha</version>
         </dependency>
         <dependency>
             <groupId>github.zjm404</groupId>
-            <artifactId>zrpc-example-api</artifactId>
+            <artifactId>zrpc-provider</artifactId>
             <version>0.1.0-alpha</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 

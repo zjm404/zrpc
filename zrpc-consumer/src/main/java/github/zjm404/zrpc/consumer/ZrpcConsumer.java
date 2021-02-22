@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
  * @date 2021/1/26
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
+@Target(ElementType.FIELD)
 @Component
 public @interface ZrpcConsumer {
     String serviceVersion() default "1.0";

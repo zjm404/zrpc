@@ -7,5 +7,5 @@ package github.zjm404.zrpc.core.api;
  * @Version 1.0
  */
 public interface IDemo {
-    public void sayHello();
+    public String sayHello();
 }
