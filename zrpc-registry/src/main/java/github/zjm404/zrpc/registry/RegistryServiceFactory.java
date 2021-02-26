@@ -1,5 +1,6 @@
 package github.zjm404.zrpc.registry;
 
+
 import github.zjm404.zrpc.core.RegistryService;
 
 /**
@@ -13,7 +14,7 @@ public class RegistryServiceFactory {
      * @param registryAddr
      * @return
      */
-    public static RegistryService getRegistryService(String registryType,String registryAddr) throws Exception {
+    public static RegistryService getRegistryService(byte registryType, String registryAddr) throws Exception {
         return new ZooKeeperRegistryService(registryAddr);
     }
 }

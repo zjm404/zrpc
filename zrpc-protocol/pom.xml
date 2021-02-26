@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>zrpc</artifactId>
-        <groupId>github.zjm404</groupId>
+        <groupId>github.zjm404.zrpc</groupId>
         <version>0.1.0-alpha</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -13,10 +13,40 @@
 
     <dependencies>
         <dependency>
-            <groupId>github.zjm404</groupId>
+            <groupId>github.zjm404.zrpc</groupId>
             <artifactId>zrpc-core</artifactId>
             <version>0.1.0-alpha</version>
         </dependency>
+        <!-- 使用 netty 来实现网络通信 -->
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-all</artifactId>
+            <version>4.1.42.Final</version>
+        </dependency>
+
+<!--                序列化框架-->
+        <dependency>
+            <groupId>com.caucho</groupId>
+            <artifactId>hessian</artifactId>
+            <version>4.0.38</version>
+        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.caucho</groupId>-->
+<!--            <artifactId>hessian</artifactId>-->
+<!--        </dependency>-->
+
+<!--        <dependency>-->
+<!--            <groupId>com.fasterxml.jackson.core</groupId>-->
+<!--            <artifactId>jackson-databind</artifactId>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>com.fasterxml.jackson.core</groupId>-->
+<!--            <artifactId>jackson-core</artifactId>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>com.fasterxml.jackson.core</groupId>-->
+<!--            <artifactId>jackson-annotations</artifactId>-->
+<!--        </dependency>-->
     </dependencies>
 
 </project>

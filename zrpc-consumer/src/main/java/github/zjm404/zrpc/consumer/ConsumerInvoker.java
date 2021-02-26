@@ -4,6 +4,7 @@ import github.zjm404.zrpc.core.RegistryService;
 import github.zjm404.zrpc.core.ServiceMeta;
 import github.zjm404.zrpc.core.ZrpcUtils;
 import github.zjm404.zrpc.protocol.*;
+import github.zjm404.zrpc.protocol.serialization.SerializationEnum;
 import io.netty.channel.DefaultEventLoop;
 import io.netty.util.concurrent.DefaultPromise;
 import lombok.extern.slf4j.Slf4j;
@@ -22,14 +23,16 @@ public class ConsumerInvoker implements InvocationHandler {
     private String serviceVersion;
     private RegistryService registryService;
     private int timeout;
+    private byte serializationCode;
     private ConsumerTransport consumerTransport;
-    public ConsumerInvoker(String serviceVersion,RegistryService registryService,int timeout){
+    public ConsumerInvoker(String serviceVersion,RegistryService registryService,int timeout,byte serializationCode){
         this.serviceVersion = serviceVersion;
         this.registryService = registryService;
         this.timeout = timeout;
     }
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+        log.info("进入代理，准备获取服务...");
         Message<Request> msg = new Message<>();
         //创建请求
         Header header = new Header();
@@ -38,7 +41,7 @@ public class ConsumerInvoker implements InvocationHandler {
         header.setMsgId(requestId);
         header.setHeaderSize(ProtocolVersionOne.HEADER_SIZE_WITHOUT_EXTENSION);
         header.setMsgType(MessageType.REQUEST.getCode());
-        header.setSerializationCode(SerializationEnum.JDK.getCode());
+        header.setSerializationCode(serializationCode);
 
         Request request = new Request();
         request.setServiceVersion(serviceVersion);
@@ -49,10 +52,12 @@ public class ConsumerInvoker implements InvocationHandler {
 
         msg.setHeader(header);
         msg.setBody(request);
+        log.info("待发送信息为:{}",msg);
         //访问注册中心，获取服务地址
         String registryKey = ZrpcUtils.buildServiceKey(request.getServiceName(),serviceVersion);
         int registryHashCode = registryKey.hashCode();
         ServiceMeta serviceMeta = registryService.discover(registryKey, registryHashCode);
+        log.info("获取服务节点,serviceMeta:{}",serviceMeta);
         //向服务节点发送服务请求
         ZrpcFuture<Response> future = new ZrpcFuture<>(
                 timeout

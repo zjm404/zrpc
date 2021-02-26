@@ -21,9 +21,8 @@ public interface ISerialization{
     /**
      * 反序列化
      * @param bytes
-     * @param <T>
      * @return
      * @throws IOException
      */
-    <T> T deSerialize(byte[] bytes) throws IOException;
+    <T> T deSerialize(byte[] bytes,Class<T> clz) throws IOException;
 }

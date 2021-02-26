@@ -22,6 +22,9 @@ public class ZKConsistentHashLoadBalancer implements ServiceLoadBalancer<Service
      */
     @Override
     public ServiceInstance<ServiceMeta> select(List<ServiceInstance<ServiceMeta>> servers, int hashCode) {
+        if (servers == null || servers.isEmpty()){
+            return null;
+        }
         //创建 Hash 环
         TreeMap<Integer,ServiceInstance<ServiceMeta>> hashCycle = new TreeMap<>();
         for (ServiceInstance<ServiceMeta> server : servers) {

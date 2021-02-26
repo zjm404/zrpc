@@ -15,5 +15,8 @@ public class Header{
     private long msgId;
     private byte msgType;
     private byte serializationCode;
-    private Object[] extension;
+    /**
+     * 作为扩展字段使用
+     */
+    private String[] extension;
 }

@@ -16,6 +16,6 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Component
 public @interface ZrpcService {
-    Class<?>  serviceInterface() default Object.class;
+    Class<?>  serviceInterface();
     String serviceVersion() default "1.0";
 }

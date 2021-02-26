@@ -7,8 +7,13 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class ConsumerUtil {
+    private static final String INIT_METHOD_NAME = "init";
     private static final AtomicLong MSG_ID = new AtomicLong(0);
     private static final Map<Long,ZrpcFuture<Response>> RESPONSE_MAP = new ConcurrentHashMap<>();
+
+    public static String getInitMethodName(){
+        return INIT_METHOD_NAME;
+    }
 
     public static long getMsgId(){
         return MSG_ID.getAndIncrement();

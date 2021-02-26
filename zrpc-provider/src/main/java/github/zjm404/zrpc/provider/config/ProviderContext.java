@@ -1,10 +1,12 @@
 package github.zjm404.zrpc.provider.config;
 
+import com.sun.jmx.snmp.ServiceName;
+import github.zjm404.zrpc.core.RegistryService;
 import github.zjm404.zrpc.core.ServiceMeta;
 import github.zjm404.zrpc.core.ZrpcUtils;
 import github.zjm404.zrpc.protocol.ZrpcDecoder;
 import github.zjm404.zrpc.protocol.ZrpcEncoder;
-import github.zjm404.zrpc.protocol.handler.RequestHandler;
+import github.zjm404.zrpc.provider.RequestHandler;
 import github.zjm404.zrpc.provider.annotion.ZrpcService;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
@@ -14,13 +16,11 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 
-import javax.imageio.spi.ServiceRegistry;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.concurrent.ConcurrentHashMap;
@@ -32,27 +32,34 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @Slf4j
 public class ProviderContext implements BeanPostProcessor, InitializingBean {
-    private String serviceAddr;
     private int servicePort;
-    private ServiceRegistry serviceRegistry;
+    private RegistryService registryService;
+    private String serviceAddr;
     private final ConcurrentHashMap<String, Object> map = new ConcurrentHashMap<>();
 
-    public ProviderContext(String serviceAddr,int servicePort,ServiceRegistry serviceRegistry) {
-        this.serviceAddr = serviceAddr;
+    public ProviderContext(int servicePort,RegistryService registryService) throws UnknownHostException {
         this.servicePort = servicePort;
-        this.serviceRegistry = serviceRegistry;
+        this.registryService = registryService;
+        this.serviceAddr = InetAddress.getLocalHost().getHostAddress();
     }
 
     @Override
     public void afterPropertiesSet() throws Exception {
-
+        new Thread(()->{
+            try {
+                startProviderServer();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (UnknownHostException e) {
+                e.printStackTrace();
+            }
+        }).start();
     }
 
     /**
      * 启动服务
      */
     private void startProviderServer() throws InterruptedException, UnknownHostException {
-        this.serviceAddr = InetAddress.getLocalHost().getHostAddress();
         EventLoopGroup boss = new NioEventLoopGroup();
         EventLoopGroup worker = new NioEventLoopGroup();
         try{
@@ -64,12 +71,12 @@ public class ProviderContext implements BeanPostProcessor, InitializingBean {
                         protected void initChannel(SocketChannel ch) throws Exception {
                             ch.pipeline()
                                     .addLast(new ZrpcDecoder())
-                                    .addLast(new RequestHandler(map))
-                                    .addLast(new ZrpcEncoder());
+                                    .addLast(new ZrpcEncoder())
+                                    .addLast(new RequestHandler(map));
                         }
                     })
                     .childOption(ChannelOption.SO_KEEPALIVE,true);
-            ChannelFuture future = sb.bind(this.serviceAddr, this.servicePort).sync();
+            ChannelFuture future = sb.bind(serviceAddr, this.servicePort).sync();
             future.channel().closeFuture().sync();
         }finally {
             worker.shutdownGracefully();
@@ -80,22 +87,24 @@ public class ProviderContext implements BeanPostProcessor, InitializingBean {
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
         ZrpcService zrpcService = bean.getClass().getAnnotation(ZrpcService.class);
-        String serviceName = zrpcService.serviceInterface().getName();
-        String serviceVersion = zrpcService.serviceVersion();
+        if(zrpcService != null) {
+            String serviceName = zrpcService.serviceInterface().getName();
+            String serviceVersion = zrpcService.serviceVersion();
 
-        try{
-            ServiceMeta serviceMeta = new ServiceMeta();
-            serviceMeta.setServiceAddr(this.serviceAddr);
-            serviceMeta.setServicePort(this.servicePort);
-            serviceMeta.setServiceName(serviceName);
-
-            serviceRegistry.registerServiceProvider(serviceMeta);
-            map.put(ZrpcUtils.buildServiceKey(serviceName,serviceVersion),bean);
-            serviceMeta.setServiceVersion(serviceVersion);
-        }catch (Exception e){
-            e.printStackTrace();
-            log.error("注册服务出错,ServiceName:{},ServiceVersion:{},Exception:{}",serviceName,serviceVersion,e);
+            try {
+                ServiceMeta serviceMeta = new ServiceMeta();
+                serviceMeta.setServiceAddr(this.serviceAddr);
+                serviceMeta.setServicePort(this.servicePort);
+                serviceMeta.setServiceName(serviceName);
+                serviceMeta.setServiceVersion(serviceVersion);
+                registryService.register(serviceMeta);
+                log.info("serviceMeta:{},bean:{}",serviceMeta,bean);
+                map.put(ZrpcUtils.buildServiceKey(serviceName, serviceVersion), bean);
+            } catch (Exception e) {
+                e.printStackTrace();
+                log.error("注册服务出错,ServiceName:{},ServiceVersion:{},Exception:{}", serviceName, serviceVersion, e);
+            }
         }
-        return null;
+        return bean;
     }
 }

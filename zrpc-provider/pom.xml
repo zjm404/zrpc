@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>zrpc</artifactId>
-        <groupId>github.zjm404</groupId>
+        <groupId>github.zjm404.zrpc</groupId>
         <version>0.1.0-alpha</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -13,9 +13,25 @@
 
     <dependencies>
         <dependency>
-            <groupId>github.zjm404</groupId>
+            <groupId>github.zjm404.zrpc</groupId>
             <artifactId>zrpc-protocol</artifactId>
             <version>0.1.0-alpha</version>
+        </dependency>
+        <dependency>
+            <groupId>github.zjm404.zrpc</groupId>
+            <artifactId>zrpc-registry</artifactId>
+            <version>0.1.0-alpha</version>
+        </dependency>
+
+        <!--        springboot 测试-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
         </dependency>
     </dependencies>
 

@@ -3,6 +3,7 @@ package github.zjm404.zrpc.registry;
 import github.zjm404.zrpc.core.RegistryService;
 import github.zjm404.zrpc.core.ServiceMeta;
 import github.zjm404.zrpc.core.ZrpcUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.curator.RetryPolicy;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
@@ -20,6 +21,7 @@ import java.util.List;
  * @author zjm
  * @date 2021/1/27
  */
+@Slf4j
 public class ZooKeeperRegistryService implements RegistryService {
     private static final int BASE_SLEEP_TIME_MS = 1000;
     private static final int MAX_RETRIES = 3;
@@ -49,10 +51,15 @@ public class ZooKeeperRegistryService implements RegistryService {
                 .payload(serviceMeta)
                 .build();
         serviceDiscovery.registerService(serviceInstance);
+        log.info("注册服务成功，serviceMeta:{}",serviceMeta);
     }
 
     @Override
     public void unRegister(ServiceMeta serviceMeta) throws Exception {
+        if(serviceMeta == null){
+            log.warn("注册中心取消注册服务失败，serviceMeta 为 null");
+            return;
+        }
         ServiceInstance<ServiceMeta> serviceInstance = ServiceInstance
                 .<ServiceMeta>builder()
                 .name(ZrpcUtils.buildServiceKey(serviceMeta.getServiceName(),serviceMeta.getServiceVersion()))

@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>zrpc</artifactId>
-        <groupId>github.zjm404</groupId>
+        <groupId>github.zjm404.zrpc</groupId>
         <version>0.1.0-alpha</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -35,7 +35,7 @@
         </dependency>
 
         <dependency>
-            <groupId>github.zjm404</groupId>
+            <groupId>github.zjm404.zrpc</groupId>
             <artifactId>zrpc-core</artifactId>
             <version>0.1.0-alpha</version>
         </dependency>
