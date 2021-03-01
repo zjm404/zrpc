@@ -28,9 +28,9 @@ public class ConsumerTransport {
                     @Override
                     protected void initChannel(SocketChannel socketChannel) throws Exception {
                         socketChannel.pipeline()
-                                .addLast(new ZrpcEncoder())
+                                .addLast(new ResponseHandler())
                                 .addLast(new ZrpcDecoder())
-                                .addLast(new ResponseHandler());
+                                .addLast(new ZrpcEncoder());
                     }
                 });
     }

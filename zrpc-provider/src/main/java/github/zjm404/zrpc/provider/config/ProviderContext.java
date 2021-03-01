@@ -70,8 +70,8 @@ public class ProviderContext implements BeanPostProcessor, InitializingBean {
                         @Override
                         protected void initChannel(SocketChannel ch) throws Exception {
                             ch.pipeline()
-                                    .addLast(new ZrpcDecoder())
                                     .addLast(new ZrpcEncoder())
+                                    .addLast(new ZrpcDecoder())
                                     .addLast(new RequestHandler(map));
                         }
                     })

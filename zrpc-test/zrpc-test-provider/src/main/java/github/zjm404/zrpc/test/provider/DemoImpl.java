@@ -8,7 +8,7 @@ import java.io.Serializable;
  * @author zjm
  * @date 2021/2/26
  */
-@ZrpcService(serviceInterface = DemoImpl.class)
+@ZrpcService(serviceInterface = IDemo.class)
 public class DemoImpl implements IDemo, Serializable {
     @Override
     public String say() {

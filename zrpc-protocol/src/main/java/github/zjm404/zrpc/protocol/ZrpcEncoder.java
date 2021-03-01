@@ -31,6 +31,7 @@ public class ZrpcEncoder extends MessageToByteEncoder<Message<Object>> {
 
     @Override
     protected void encode(ChannelHandlerContext channelHandlerContext, Message<Object> objectMessage, ByteBuf byteBuf) throws Exception {
+        log.info("开始消息编码");
         Header header = objectMessage.getHeader();
         log.info("编码消息，消息为:{}", objectMessage);
         //魔数

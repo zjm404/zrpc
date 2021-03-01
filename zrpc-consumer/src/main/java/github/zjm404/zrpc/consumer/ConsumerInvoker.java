@@ -45,6 +45,7 @@ public class ConsumerInvoker implements InvocationHandler {
 
         Request request = new Request();
         request.setServiceVersion(serviceVersion);
+        //TODO:感觉这里有问题
         request.setServiceName(method.getDeclaringClass().getName());
         request.setMethodName(method.getName());
         request.setArgs(args);

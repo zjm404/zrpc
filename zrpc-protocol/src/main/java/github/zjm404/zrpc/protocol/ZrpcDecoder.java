@@ -41,29 +41,36 @@ public class ZrpcDecoder extends ByteToMessageDecoder {
     protected void decode(ChannelHandlerContext channelHandlerContext, ByteBuf byteBuf, List<Object> list) throws Exception {
         byteBuf.markReaderIndex();
         int readableBytes = byteBuf.readableBytes();
-        if (readableBytes < 9) {
-//            log.warn("消息解码失败，消息过短。消息长度:{}", readableBytes);
+        //小于除扩展字段之外的消息长度，则说明消息过短直接返回就好
+        if (readableBytes < ProtocolVersionOne.HEADER_SIZE_WITHOUT_EXTENSION) {
+            log.warn("消息解码失败，消息过短。消息长度:{}", readableBytes);
+            byteBuf.resetReaderIndex();
             return;
         }
 
         //魔数
         short magicNum = byteBuf.readShort();
+        //这里算是消息不合规问题，不是消息不完整问题，可以直接向 out 中添加数据结束处理消息完整的行为
         if(magicNum != ProtocolVersionOne.MAGIC){
-//            log.warn("消息解码失败,非法消息，magicNum:{}", magicNum);
+            log.warn("消息解码失败,非法消息，magicNum:{}", magicNum);
+            byteBuf.resetReaderIndex();
             return;
         }
         //消息协议版本
         byte version = byteBuf.readByte();
+        //这里算是消息不合规问题，不是消息不完整问题，可以直接向 out 中添加数据结束处理消息完整的行为
         if (version != ProtocolVersionOne.VERSION) {
-//            log.warn("消息解码失败，当前消息协议不支持该版本.version:{}", version);
+            log.warn("消息解码失败，当前消息协议不支持该版本.version:{}", version);
+            byteBuf.resetReaderIndex();
             return;
         }
         //消息头长度
         short headerSize = byteBuf.readShort();
         //消息长度
         int msgSize = byteBuf.readInt();
+        //消息过短，直接返回好了，等消息完整后再处理
         if (msgSize > readableBytes) {
-//            log.warn("消息解码失败，消息长度过短，size:{}", msgSize);
+            log.warn("消息解码失败，消息长度过短，size:{}", msgSize);
             byteBuf.resetReaderIndex();
             return;
         }
@@ -98,6 +105,7 @@ public class ZrpcDecoder extends ByteToMessageDecoder {
             }
             Request request = serialization.deSerialize(data,Request.class);
             if (request == null) {
+                //这里算消息错误，不算完整性问题，可以提前退出了
                 log.info("header:{}",header);
                 log.warn("请求消息反序列化后为 null,msgId:{}", msgId);
                 return;
@@ -118,6 +126,7 @@ public class ZrpcDecoder extends ByteToMessageDecoder {
         } else if (MessageType.HEARTBEAT.getCode() == msgType) {
             //TODO 心跳
         } else {
+            //这里也可直接返回了，是消息错误
             log.warn("无该消息类型，MessageType:{}", msgType);
         }
     }

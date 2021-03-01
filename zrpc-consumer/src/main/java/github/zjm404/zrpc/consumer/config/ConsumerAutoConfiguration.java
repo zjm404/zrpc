@@ -53,6 +53,7 @@ public class ConsumerAutoConfiguration {
 //        }
 //        log.info("properties:{}",dp);
 //        log.info("开始初始化 Consumer 模块环境");
+//        return new ConsumerContext((byte)1);
         return new ConsumerContext((byte)1);
     }
     private static void setField(Field field,String value,Method method,Object obj) throws InvocationTargetException, IllegalAccessException {
