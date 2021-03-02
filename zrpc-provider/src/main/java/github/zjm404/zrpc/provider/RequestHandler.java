@@ -40,7 +40,7 @@ public class RequestHandler extends SimpleChannelInboundHandler<Message<Request>
                 throw new NullPointerException(String.format("不存在该service,服务名称：%s 服务版本：%s",request.getServiceName(),request.getServiceVersion()));
             }
 
-            Object data = implConvertToInterface(obj,request);
+            Object data = executeServiceMethod(obj,request);
             Response response = new Response();
             Message<Response> message = new Message<>();
             response.setData(data);
@@ -54,10 +54,10 @@ public class RequestHandler extends SimpleChannelInboundHandler<Message<Request>
     }
 
     /**
-     * 将实现类的类型转为接口类
+     * 执行方法，返回执行后的返回值
      * @return
      */
-    private Object implConvertToInterface(Object service,Request request){
+    private Object executeServiceMethod(Object service,Request request){
         log.info("读取到消息请求,request:{}",request);
         Class<?> aClass = service.getClass();
         String methodName = request.getMethodName();

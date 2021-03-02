@@ -1,10 +1,7 @@
 package github.zjm404.zrpc.consumer;
 
 import github.zjm404.zrpc.core.ServiceMeta;
-import github.zjm404.zrpc.protocol.Message;
-import github.zjm404.zrpc.protocol.Request;
-import github.zjm404.zrpc.protocol.ZrpcDecoder;
-import github.zjm404.zrpc.protocol.ZrpcEncoder;
+import github.zjm404.zrpc.protocol.*;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
@@ -28,9 +25,10 @@ public class ConsumerTransport {
                     @Override
                     protected void initChannel(SocketChannel socketChannel) throws Exception {
                         socketChannel.pipeline()
-                                .addLast(new ResponseHandler())
+
                                 .addLast(new ZrpcDecoder())
-                                .addLast(new ZrpcEncoder());
+                                .addLast(new ZrpcEncoder())
+                                .addLast(new ResponseHandler());
                     }
                 });
     }

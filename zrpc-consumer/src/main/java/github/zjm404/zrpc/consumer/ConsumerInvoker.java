@@ -4,7 +4,6 @@ import github.zjm404.zrpc.core.RegistryService;
 import github.zjm404.zrpc.core.ServiceMeta;
 import github.zjm404.zrpc.core.ZrpcUtils;
 import github.zjm404.zrpc.protocol.*;
-import github.zjm404.zrpc.protocol.serialization.SerializationEnum;
 import io.netty.channel.DefaultEventLoop;
 import io.netty.util.concurrent.DefaultPromise;
 import lombok.extern.slf4j.Slf4j;
@@ -24,11 +23,12 @@ public class ConsumerInvoker implements InvocationHandler {
     private RegistryService registryService;
     private int timeout;
     private byte serializationCode;
-    private ConsumerTransport consumerTransport;
     public ConsumerInvoker(String serviceVersion,RegistryService registryService,int timeout,byte serializationCode){
+        log.info("创建了代理类");
         this.serviceVersion = serviceVersion;
         this.registryService = registryService;
         this.timeout = timeout;
+        this.serializationCode = serializationCode;
     }
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
@@ -38,6 +38,7 @@ public class ConsumerInvoker implements InvocationHandler {
         Header header = new Header();
         long requestId = ConsumerUtil.getMsgId();
         header.setMagicNum(ProtocolVersionOne.MAGIC);
+        header.setVersion(ProtocolVersionOne.VERSION);
         header.setMsgId(requestId);
         header.setHeaderSize(ProtocolVersionOne.HEADER_SIZE_WITHOUT_EXTENSION);
         header.setMsgType(MessageType.REQUEST.getCode());
@@ -45,7 +46,6 @@ public class ConsumerInvoker implements InvocationHandler {
 
         Request request = new Request();
         request.setServiceVersion(serviceVersion);
-        //TODO:感觉这里有问题
         request.setServiceName(method.getDeclaringClass().getName());
         request.setMethodName(method.getName());
         request.setArgs(args);
@@ -64,7 +64,9 @@ public class ConsumerInvoker implements InvocationHandler {
                 timeout
                 ,new DefaultPromise<>(new DefaultEventLoop())
         );
+        ConsumerUtil.addResponse(header.getMsgId(),future);
         ConsumerTransport consumerTransport = new ConsumerTransport();
+        log.info("request:{}",request);
         consumerTransport.sendRequest(msg,serviceMeta);
         return future.getPromise().get(future.getTimeout(), TimeUnit.MILLISECONDS).getData();
     }

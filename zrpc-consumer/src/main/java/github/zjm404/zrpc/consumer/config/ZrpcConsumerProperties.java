@@ -10,7 +10,8 @@ import org.springframework.stereotype.Component;
  */
 @Data
 @ConfigurationProperties(prefix = "zrpc-consumer")
-@Component
 public class ZrpcConsumerProperties {
     private byte serializationCode = 2;
+    private byte registryType = 1;
+    private String registryAddr = "127.0.0.1:2181";
 }

@@ -2,8 +2,11 @@ package github.zjm404.zrpc.test.consumer;
 
 import github.zjm404.zrpc.consumer.ZrpcConsumer;
 import github.zjm404.zrpc.test.facade.IDemo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.annotation.Resource;
 
 /**
  * @author zjm
@@ -11,11 +14,13 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 public class DemoController {
-    @ZrpcConsumer(registryAddr = "127.0.0.1:2181")
+    @ZrpcConsumer
+    @Resource(type = IDemo.class)
     private IDemo demo;
 
     @GetMapping("/test")
     public String say(){
+//        return "hello world";
         return demo.say();
     }
 }

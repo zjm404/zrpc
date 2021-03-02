@@ -17,8 +17,5 @@ import java.lang.annotation.Target;
 @Component
 public @interface ZrpcConsumer {
     String serviceVersion() default "1.0";
-    // ZOOKEEPER code 为 1,默认为 zookeeper
-    byte registryType() default 1;
     int timeout() default 5000;
-    String registryAddr();
 }

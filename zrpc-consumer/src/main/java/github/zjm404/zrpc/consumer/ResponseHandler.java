@@ -16,6 +16,7 @@ public class ResponseHandler extends SimpleChannelInboundHandler<Message<Respons
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, Message<Response> responseMessage) throws Exception {
         log.info("接收响应,response:{}",responseMessage);
         ZrpcFuture<Response> future = ConsumerUtil.getResponse(responseMessage.getHeader().getMsgId());
+        log.info("future:{}",future);
         future.getPromise().setSuccess(responseMessage.getBody());
     }
 }

@@ -15,6 +15,7 @@ import io.netty.channel.DefaultEventLoop;
 import io.netty.util.concurrent.DefaultPromise;
 import lombok.extern.slf4j.Slf4j;
 
+import java.lang.reflect.Method;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -24,8 +25,6 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class TransportTest {
     public static void main(String[] args) throws Exception {
-        ConsumerTransport transport = new ConsumerTransport();
-
         //组装信息
         Header header = new Header();
         long requestId = ConsumerUtil.getMsgId();
@@ -40,6 +39,10 @@ public class TransportTest {
         request.setServiceName(IDemo.class.getName());
         log.info("serviceName:{}",request.getServiceName());
         request.setServiceVersion("1.0");
+        Method[] methods = IDemo.class.getMethods();
+        request.setMethodName(methods[0].getName());
+        request.setArgs(methods[0].getParameters());
+        request.setArgTypes(methods[0].getParameterTypes());
 
         Message<Request> msg = new Message<>();
         msg.setBody(request);
@@ -55,7 +58,9 @@ public class TransportTest {
                 timeout
                 ,new DefaultPromise<>(new DefaultEventLoop())
         );
+        ConsumerUtil.addResponse(header.getMsgId(),future);
         ConsumerTransport consumerTransport = new ConsumerTransport();
+        log.info("request:{}",request);
         consumerTransport.sendRequest(msg,serviceMeta);
         Object data = future.getPromise().get(future.getTimeout(), TimeUnit.MILLISECONDS).getData();
         System.out.println(data);
